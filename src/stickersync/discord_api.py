@@ -12,7 +12,7 @@ from typing import Any
 import requests
 
 API = "https://discord.com/api/v10"
-USER_AGENT = "DiscordBot (https://github.com/stickersync/StickerSync, 0.1)"
+USER_AGENT = "DiscordBot (https://github.com/Benlarkin/StickerSync, 0.1)"
 
 # Sticker slots per server boost tier.
 SLOTS_BY_TIER = {0: 5, 1: 15, 2: 30, 3: 60}

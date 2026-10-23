@@ -42,7 +42,7 @@ Done. new: 2, converted: 2, uploaded: 2, removed: 0, failed: 0, waiting for slot
 Requires Python 3.11+.
 
 ```bash
-git clone https://github.com/<you>/StickerSync && cd StickerSync
+git clone https://github.com/Benlarkin/StickerSync && cd StickerSync
 pip install -e ".[browser]"      # or: pipx install ".[browser]"
 playwright install chromium
 cp .env.example .env             # then fill it in
