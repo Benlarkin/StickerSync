@@ -5,7 +5,12 @@ server stickers. It converts them to APNG or GIF as needed and squeezes them
 under Discord's limits automatically.
 
 Run it whenever you want a fresh batch. It remembers what it has already
-uploaded, so each run only handles your new favorites.
+uploaded, so each run only handles your new favorites. Use the app, or the
+command line if you prefer.
+
+![The StickerSync app, showing Peel the mascot, a grid of new favorite stickers, and sync options](docs/screenshot.png)
+
+<sub>Shown with demo stickers.</sub>
 
 ```
 $ stickersync run
@@ -43,9 +48,9 @@ Requires Python 3.11+.
 
 ```bash
 git clone https://github.com/Benlarkin/StickerSync && cd StickerSync
-pip install -e ".[browser]"      # or: pipx install ".[browser]"
+pip install -e ".[browser,gui]"  # or: pipx install ".[browser,gui]"
 playwright install chromium
-cp .env.example .env             # then fill it in
+cp .env.example .env             # optional if you use the app
 ```
 
 ### Discord bot
@@ -65,10 +70,32 @@ stickersync login
 
 Log in in the window that opens, then press Enter in the terminal.
 
-## Usage
+## The app
+
+```bash
+stickersync gui
+```
+
+This opens StickerSync in its own window, with Peel the mascot keeping you
+company. Without the `gui` extra, or with `--browser`, it opens in your web
+browser instead.
+
+1. **Set up Discord** from the chip at the top right. Paste the bot token and
+   server ID once, and they're saved to `~/.stickersync/config.env`.
+2. **Check TikTok for new favorites.** A browser opens; the first time, log
+   in. Open the sticker picker's Favorites tab, then click **I'm done** in
+   the app.
+3. Pick the stickers you want and click **Sync**. Turn on **Preview only** to
+   convert first and see the real output size on each card.
+
+The app only listens on `127.0.0.1`, and every request needs a random token
+that's created at launch, so other websites can't talk to it.
+
+## Command line
 
 | Command | What it does |
 | --- | --- |
+| `stickersync gui` | Open the app. |
 | `stickersync run` | Capture favorites, convert new ones, upload. |
 | `stickersync run --dry-run` | Same, but stops after converting. Look in `~/.stickersync/cache/converted/` to preview the files. |
 | `stickersync run --pick` | Choose which new stickers to sync from a list. |
@@ -130,7 +157,8 @@ their own sample animations.
 - [ ] Suggest the sticker's emoji tag from its name
 - [ ] Lottie passthrough for vector stickers
 - [ ] Optional sync to custom emoji (256 KB limit) as well as stickers
-- [ ] Preview grid (HTML) for `--dry-run`
+- [x] Preview grid for dry runs (the app's **Preview only** mode)
+- [ ] Dark theme for the app
 
 ## Disclaimer
 

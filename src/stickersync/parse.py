@@ -18,6 +18,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+from collections import deque
 from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Any
@@ -39,14 +40,15 @@ def _is_image_struct(value: Any) -> bool:
 
 
 def _walk(obj: Any) -> Iterator[dict]:
-    stack = [obj]
-    while stack:
-        cur = stack.pop()
+    """Breadth-first, so stickers come out in the order TikTok listed them."""
+    queue = deque([obj])
+    while queue:
+        cur = queue.popleft()
         if isinstance(cur, dict):
             yield cur
-            stack.extend(cur.values())
+            queue.extend(cur.values())
         elif isinstance(cur, list):
-            stack.extend(cur)
+            queue.extend(cur)
 
 
 def _pick_id(d: dict, images: dict[str, dict]) -> str:

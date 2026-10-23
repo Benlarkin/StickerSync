@@ -229,6 +229,24 @@ def prune(
 
 
 @app.command()
+def gui(
+    from_file: Annotated[
+        Path | None,
+        typer.Option("--from", help="Show stickers from this file instead of the latest capture."),
+    ] = None,
+    port: Annotated[int, typer.Option(help="Port to serve on (0 = pick a free one).")] = 0,
+    browser: Annotated[
+        bool,
+        typer.Option("--browser", help="Open in your web browser instead of an app window."),
+    ] = False,
+) -> None:
+    """Open the StickerSync app (a local GUI with Peel)."""
+    from .gui import run_gui
+
+    run_gui(source=from_file, port=port, window=not browser)
+
+
+@app.command()
 def version() -> None:
     """Print the version."""
     console.print(__version__)

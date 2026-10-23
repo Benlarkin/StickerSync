@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StickerSync</title>
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div class="app">
+  <header class="card topbar">
+    <div class="brand">
+      <div class="brand-icon" id="brand-icon"></div>
+      <span class="brand-name">StickerSync</span>
+    </div>
+    <div class="topbar-right">
+      <button class="chip" id="chip-tiktok" type="button"><span class="dot"></span><span class="chip-label">TikTok</span></button>
+      <button class="chip" id="chip-discord" type="button"><span class="dot"></span><span class="chip-label">Discord</span></button>
+      <button class="icon-btn" id="open-settings" type="button" aria-label="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <section class="card sync-card">
+        <div class="peel-row">
+          <div class="peel" id="peel"></div>
+          <div class="bubble" id="bubble" aria-live="polite">Hi! Let's grab your favorites.</div>
+        </div>
+        <button class="btn-primary" id="sync-btn" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12a9 9 0 0 1 15.5-6.2"/><path d="M18 2v4h-4M6 22v-4h4"/></svg>
+          <span id="sync-label">Sync</span>
+        </button>
+        <button class="btn-soft" id="capture-btn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Check TikTok for new favorites
+        </button>
+
+        <div class="job" id="job" hidden>
+          <div class="job-head"><span class="spinner" aria-hidden="true"></span><span id="job-title">Working…</span></div>
+          <p class="job-prompt" id="job-prompt" hidden></p>
+          <button class="btn-primary small" id="job-continue" type="button" hidden>I'm done</button>
+          <pre class="job-log" id="job-log" aria-live="polite"></pre>
+        </div>
+
+        <div class="slots" id="slots" hidden>
+          <div class="slots-head"><span>Server sticker slots</span><span class="muted" id="slots-count"></span></div>
+          <div class="meter"><div class="meter-fill" id="slots-fill"></div><div class="meter-batch" id="slots-batch"></div></div>
+          <div class="muted small-text" id="slots-note"></div>
+        </div>
+      </section>
+
+      <section class="card options">
+        <div class="eyebrow">Options</div>
+        <div class="field">
+          <span class="field-label" id="fmt-label">Animated format</span>
+          <div class="segmented" role="group" aria-labelledby="fmt-label" id="formats">
+            <button type="button" data-fmt="auto" aria-pressed="true">Auto</button>
+            <button type="button" data-fmt="apng" aria-pressed="false">APNG</button>
+            <button type="button" data-fmt="gif" aria-pressed="false">GIF</button>
+          </div>
+        </div>
+        <button class="switch-row" type="button" role="switch" aria-checked="false" id="opt-rotate">
+          <span class="switch-text"><span class="switch-title">Make room automatically</span><span class="switch-hint">Remove the oldest synced stickers when full</span></span>
+          <span class="switch" aria-hidden="true"><span class="knob"></span></span>
+        </button>
+        <button class="switch-row" type="button" role="switch" aria-checked="false" id="opt-dry">
+          <span class="switch-text"><span class="switch-title">Preview only</span><span class="switch-hint">Convert without uploading</span></span>
+          <span class="switch" aria-hidden="true"><span class="knob"></span></span>
+        </button>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="card">
+        <div class="section-head">
+          <h2>Favorites <span class="muted count" id="sel-count"></span></h2>
+          <div class="section-actions">
+            <div class="tabs" role="tablist" aria-label="Show">
+              <button type="button" role="tab" aria-selected="true" data-filter="new">New</button>
+              <button type="button" role="tab" aria-selected="false" data-filter="all">All</button>
+            </div>
+            <button class="btn-ghost" id="select-all" type="button">Select all</button>
+          </div>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="empty" id="empty" hidden></div>
+      </section>
+
+      <section class="card">
+        <h2 class="small-h">Recent activity</h2>
+        <ul class="activity" id="activity"></ul>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog id="settings">
+  <form method="dialog" id="settings-form" class="settings">
+    <div class="settings-head">
+      <h2>Discord setup</h2>
+      <button class="icon-btn" value="cancel" formnovalidate aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <p class="muted">Create a bot at discord.com/developers, invite it with the <b>Manage Expressions</b> permission, and paste its details here. They're saved on this computer only.</p>
+    <label class="text-field"><span>Bot token</span><input type="password" id="set-token" autocomplete="off" placeholder="Leave blank to keep the current token"></label>
+    <label class="text-field"><span>Server ID</span><input type="text" id="set-guild" inputmode="numeric" placeholder="Right-click your server › Copy Server ID"></label>
+    <p class="form-error" id="settings-error" role="alert" hidden></p>
+    <div class="settings-actions">
+      <button class="btn-ghost" value="cancel" formnovalidate>Cancel</button>
+      <button class="btn-primary small" id="settings-save" value="save">Save</button>
+    </div>
+    <hr>
+    <button class="btn-soft" type="button" id="relogin">Log in to TikTok again</button>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
