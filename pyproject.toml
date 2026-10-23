@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "stickersync"
+version = "0.1.0"
+description = "Sync your favorited TikTok stickers to a Discord server as animated stickers."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [{ name = "StickerSync contributors" }]
+keywords = ["tiktok", "discord", "stickers", "apng", "gif"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Environment :: Console",
+  "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+]
+dependencies = [
+  "pillow>=10.3",
+  "requests>=2.31",
+  "typer>=0.12",
+  "rich>=13.7",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+browser = ["playwright>=1.44"]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+stickersync = "stickersync.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stickersync"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
